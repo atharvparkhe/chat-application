@@ -15,7 +15,15 @@ class ChatConsumer(WebsocketConsumer):
             self.channel_name
         )
         self.accept()
-        self.send(text_data = json.dumps({'Connected' : True}))
+        result = {}
+        payload = []
+        for chat in Chat.objects.filter(group=self.room_name):
+            payload.append({
+                "sender" : chat.sender.email,
+                "msg" : chat.message
+            })
+        result["PreviousChats"] = payload
+        self.send(text_data = json.dumps(result))
 
     def receive(self , text_data):
         async_to_sync(self.channel_layer.group_send)(
@@ -40,5 +48,4 @@ class ChatConsumer(WebsocketConsumer):
         data = json.loads(data)
         self.send(text_data = json.dumps({'answer' : data }))
 
-# print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")
 # print("@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@")

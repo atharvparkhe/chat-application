@@ -9,7 +9,7 @@ class Customers(BaseUser):
     bio = models.TextField(null=True, blank=True)
     online_status = models.BooleanField(default=False)
     def __str__(self):
-        return self.name
+        return self.email
 
 
 @receiver(post_save, sender=Customers)

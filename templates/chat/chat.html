@@ -6,7 +6,7 @@
 {% endblock title %}
 
 {% block content %}
-<section  onload="getPreviousChats()">
+<section>
 <div class="page-content">
     <div class="chat-wrapper">
         <div class="chat-sidebar">
@@ -138,24 +138,7 @@
                 <a href="javascript:;"><i class='bx bx-user-plus'></i></a>
             </div>
         </div>
-        <div class="chat-content" id="chats">
-            <div class="chat-content-leftside">
-                <div class="d-flex">
-                    <div class="flex-grow-1 ms-2">
-                        <p class="mb-0 chat-time">{{chatting_to.name}}, 2:35 PM</p>
-                        <p class="chat-left-msg">Howdy Jow whats going on.</p>
-                    </div>
-                </div>
-            </div>
-            <div class="chat-content-rightside">
-                <div class="d-flex ms-auto">
-                    <div class="flex-grow-1 me-2">
-                        <p class="mb-0 chat-time text-end">you, 2:37 PM</p>
-                        <p class="chat-right-msg">All good brother, what about you ?</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <div class="chat-content" id="chats"></div>
         <div class="chat-footer d-flex align-items-center">
             <div class="flex-grow-1 pe-2">
                 <div class="input-group">
@@ -177,17 +160,25 @@
     var url = "ws://127.0.0.1:8000/ws/{{room.id}}/chat/"
     var socket = new WebSocket(url)
 
-    var data = "this is test message"
     var msg_sender = "{{request.user}}"
     var msg_reciever_name = "{{chatting_to.name}}"
     var msg_reciever_email = "{{chatting_to.email}}"
 
     socket.onopen = function(e){
-        console.log('Connected')
+        console.log("connected")
     }
 
     socket.onmessage = function(e){
         var data = JSON.parse(e.data)
+        console.log(data.PreviousChats)
+        for (let i in data.PreviousChats) {
+            if (data.PreviousChats[i].sender == msg_reciever_email) {
+                UpdateUI(msg_reciever_name, data.PreviousChats[i].msg, "right")
+            }
+            else{
+                UpdateUI("you", data.PreviousChats[i].msg, "left")
+            }
+        }
         if (data.answer.sender == msg_reciever_email) {
             UpdateUI(msg_reciever_name, data.answer.message, "right")
         }
@@ -235,11 +226,6 @@
                 </div>
             </div>`
         }
-    }
-
-    function getPreviousChats(){
-        window.location.href = `show-chats/{{room.id}}/`;
-        console.log("called the fn")
     }
 
 </script>
