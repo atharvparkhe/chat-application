@@ -1,0 +1,28 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+	Home
+{% endblock title %}
+
+{% block content %}
+	<div class="bg-lock-screen">
+		<div class="authentication-lock-screen d-flex align-items-center justify-content-center">
+			<div class="card shadow-none bg-transparent">
+				<div class="card-body p-md-5 text-center">
+					<h2>Chat Application</h2>
+					<p class="mt-2">Lets get in touch</p>
+					{% if request.user.is_authenticated %}
+						<div class="d-grid">
+							<a href="{% url 'chat' %}" class="btn btn-white mt-3">Start Chatting</a>
+						</div>
+					{% else %}
+						<div class="d-grid">
+							<a href="{% url 'login' %}" class="btn btn-white mt-3">Login</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock content %}
