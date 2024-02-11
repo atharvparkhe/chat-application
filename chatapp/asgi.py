@@ -10,7 +10,7 @@ application = get_asgi_application()
 
 ws_patterns = [
     # path("ws/<room_id>/chat/<user_id>/" , ChatConsumer.as_asgi()),
-    path("ws/<room_id>/chat/" , ChatConsumer.as_asgi()),
+    # path("ws/<room_id>/chat/" , ChatConsumer.as_asgi()),
 ]
 
 application = ProtocolTypeRouter({
